@@ -1,6 +1,6 @@
 // using mongoDB ----------------------------------------------------------------------------------------------------------------------------------
 const mongodb = require('mongodb');
-const getDb = require("../util/database").getDb;
+const getDb = require('../util/database').getDb;
 
 class Product {
   constructor(title, price, description, imageUrl) {
@@ -8,52 +8,50 @@ class Product {
     this.price = price;
     this.description = description;
     this.imageUrl = imageUrl;
-    
   }
 
   save() {
     const db = getDb();
-    return db.collection("products")
-    .insertOne(this)
-    .then( result => {
-      console.log(result);
-    })
-    .catch( err => {
-      console.log(err);
-    });
+    return db
+      .collection('products')
+      .insertOne(this)
+      .then(result => {
+        console.log(result);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
-  static fetchAll(){
+  static fetchAll() {
     const db = getDb();
     return db
-    .collection('products')
-    .find()
-    .toArray()
-    .then(products => {
-      console.log(products);
-      return products;
-    })
-    .catch(err => {
-      console.log(err);
-    });
+      .collection('products')
+      .find()
+      .toArray()
+      .then(products => {
+        console.log(products);
+        return products;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
-
 
   static findById(prodId) {
     const db = getDb();
-      return db 
+    return db
       .collection('products')
-      .find({_id: new mongodb.ObjectId(prodId)})
+      .find({ _id: new mongodb.ObjectId(prodId) })
       .next()
-      .then( product => {
+      .then(product => {
         console.log(product);
         return product;
       })
-      .catch ( err => {
+      .catch(err => {
         console.log(err);
-      })
-  };
-
+      });
+  }
 }
 
 module.exports = Product;
