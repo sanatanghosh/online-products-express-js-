@@ -1,6 +1,24 @@
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
+// const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const User = require('../models/user');
+
+const mailTransporter = nodemailer.createTransport({
+  service: 'gmail', 
+  auth: { 
+    // ENTER YOUR ORIGINAL GMAIL ID PASSWORD
+      user: 'sanatangts1997@gmail.com', 
+      pass: '********'
+  } 
+});
+
+// let mailDetails = { 
+//   from: 'sanatangts1997@gmail.com', 
+//   to: this.email, 
+//   subject: 'Sign Up Suceed', 
+//   text: 'Thank you for signing up..!! You can login now..!!'
+// };
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error');
@@ -68,7 +86,10 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: email })
     .then(userDoc => {
       if (userDoc) {
-        req.flash('error', 'E-Mail exists already, please pick a different one.');
+        req.flash(
+          'error',
+          'E-Mail exists already, please pick a different one.'
+        );
         return res.redirect('/signup');
       }
       return bcrypt
@@ -83,6 +104,23 @@ exports.postSignup = (req, res, next) => {
         })
         .then(result => {
           res.redirect('/login');
+          return mailTransporter.sendMail({
+            to: email,
+            from: 'sanatangts1997@gmail.com',
+            subject: 'Signup succeeded!',
+            html: '<h1>You successfully signed up!</h1>'
+          });
+
+        //   return mailTransporter.sendMail(mailDetails, function(err, data) { 
+        //     if(err) { 
+        //         console.log('Error Occurs'); 
+        //     } else { 
+        //         console.log('Email sent successfully'); 
+        //     } 
+        // }); 
+        })
+        .catch(err => {
+          console.log(err);
         });
     })
     .catch(err => {
