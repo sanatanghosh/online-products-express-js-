@@ -1,9 +1,9 @@
 // using mongoose ----------------------------------------------------------------------------------------------------------------------------------------
 const mongoose = require('mongoose');
-const { schema } = require('./user');
+
 const Schema = mongoose.Schema;
 
-const productSchema = new Schema ({
+const productSchema = new Schema({
   title: {
     type: String,
     required: true
@@ -27,8 +27,7 @@ const productSchema = new Schema ({
   }
 });
 
-module.exports =mongoose.model('Product' , productSchema);
-
+module.exports = mongoose.model('Product', productSchema);
 
 
 
